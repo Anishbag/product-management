@@ -6,12 +6,14 @@ import { RegisterDto } from './dto/register.dto.js';
 import * as bcrypt from 'bcrypt'
 import { LoginDto } from './dto/login.dto.js';
 import { Role } from '../enums.js';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
     constructor(
         @InjectRepository(User)
         private readonly userRepository:Repository<User>,
+        private readonly jwtService: JwtService,
     ){}
 
     async register(registerDto:RegisterDto){
@@ -50,12 +52,21 @@ async login(loginDto:LoginDto){
     if(!isPasswordValid){
         throw new UnauthorizedException("invalide email or password")
     }
+
+    const payload={
+        sub:user.id,
+        email:user.email,
+        role:user.role
+    };
+    const accessToken = this.jwtService.sign(payload);
+
     return {
         message :"login seccessfully",
+        accessToken,
         user:{
             id: user.id,
             email: user.email,
-            Role: user.role,
+            role: user.role,
         },
     };
 }

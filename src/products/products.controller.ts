@@ -3,6 +3,9 @@ import { ProductsService } from './products.service.js';
 import { CreateProductDto } from './dtro/create-product.dto.js';
 import { UpdateProductDto } from './dtro/update-product.dto.js';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
+import { Roles } from '../auth/decorators/roles.decorator.js';
+import { Role } from '../enums.js';
+import { RolesGuard } from '../auth/guards/roles.guard.js';
 
 @Controller('products')
 @UseGuards(JwtAuthGuard)
@@ -10,6 +13,9 @@ export class ProductsController {
     constructor(
         private readonly productsService: ProductsService,
     ){}
+
+    @Roles(Role.ADMIN)
+    @UseGuards(JwtAuthGuard,RolesGuard)
 
     @Post()
     create(@Body() createProductDto: CreateProductDto){
@@ -26,6 +32,8 @@ export class ProductsController {
         return this.productsService.findone(Number(id));
     }
 
+     @Roles(Role.ADMIN)   
+     @UseGuards(JwtAuthGuard, RolesGuard)
     @Patch(':id')
     update(
         @Param('id') id: string,
@@ -37,6 +45,8 @@ export class ProductsController {
         );
     }
 
+    @Roles(Role.ADMIN)   
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @Delete(':id')
     remove(@Param('id') id: string){
         return this.productsService.remove(Number(id));

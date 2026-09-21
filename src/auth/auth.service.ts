@@ -33,7 +33,16 @@ export class AuthService {
             password:hashedPassword,
 
         });
-        return this.userRepository.save(user);
+       const savedUser = await this.userRepository.save(user);
+       return{
+        message: 'Registered successfully',
+        user:{
+            id: savedUser.id,
+            email: savedUser.email,
+            role: savedUser.role,
+            createdAt: savedUser.createdAt,
+        },
+       };
 }
 
 async login(loginDto:LoginDto){

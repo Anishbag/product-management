@@ -5,6 +5,7 @@ import { ProductsModule } from './products/products.module.js';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module.js';
+import { UsersModule } from './users/users.module.js';
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -29,7 +30,8 @@ import { AuthModule } from './auth/auth.module.js';
    
   }),
     ProductsModule,
-    AuthModule],
+    AuthModule,
+    UsersModule],
   controllers: [AppController],
   providers: [AppService],
 })
